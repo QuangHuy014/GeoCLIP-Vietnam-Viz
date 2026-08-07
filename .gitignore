@@ -1,0 +1,25 @@
+# Python & Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# PyTorch & HuggingFace Models / Cache
+.cache/
+*.pth
+*.safetensors
+*.bin
+
+# IDEs & System
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Output artifacts
+demo_map.html
+temp_*
+*.log

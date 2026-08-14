@@ -15,7 +15,7 @@ from src.gis.distance_metrics import (
 from src.viz.map_builder import create_prediction_map
 
 __version__ = "1.0.0"
-__author__ = "UIT Data Analytics Team"
+__author__ = "GeoCLIP Vietnam Project"
 
 __all__ = [
     "GeoCLIPService",

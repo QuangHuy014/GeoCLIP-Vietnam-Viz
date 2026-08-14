@@ -7,8 +7,8 @@ with open("README.md", "r", encoding="utf-8") as fh:
 setup(
     name="geoclip-vietnam",
     version="1.0.0",
-    author="UIT Data Analytics Team",
-    author_email="quanghuy@uit.edu.vn",
+    author="GeoCLIP Vietnam Project",
+    author_email="contact@geoclip-vietnam.org",
     description="Python library for image geo-localization in Vietnam and Globally using GeoCLIP (Vision-Location Matching)",
     long_description=long_description,
     long_description_content_type="text/markdown",

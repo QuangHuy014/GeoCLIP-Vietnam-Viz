@@ -62,11 +62,17 @@ Dự án này ứng dụng kiến trúc mạng nơ-ron **GeoCLIP (Contrastive Vi
 ```text
 GeoCLIP-Vietnam-Viz/
 ├── 📘 README.md                  # Hướng dẫn chi tiết dự án (file này)
+├── 📦 DOCS_LIBRARY_USAGE.md      # Hướng dẫn đóng gói và gọi hàm thư viện cho dự án khác
+├── ⚙️ setup.py                   # Cấu hình đóng gói thư viện Python Wheel (.whl)
 ├── 📋 PLAN_TEAM.md               # Kế hoạch phân công công việc 2 tuần cho nhóm
 ├── 📄 requirements.txt           # Danh sách các thư viện Python phụ thuộc
 ├── 📄 .gitignore                 # Cấu hình bỏ qua các file tạm / cache
 ├── ⚡ demo_cli.py                 # Script chạy thử nghiệm dự đoán nhanh qua dòng lệnh
-├── 🖥️ app.py                     # Giao diện Web Dashboard Streamlit
+├── 🧪 test_vietnam_full.py       # Bộ kiểm thử tự động toàn diện (Integration Tests)
+├── 🖥️ app.py                     # Giao diện Web Dashboard Streamlit & Bản đồ Folium
+│
+├── 📂 dist/                      # Thư mục chứa gói thư viện (.whl và .tar.gz)
+│   └── geoclip_vietnam-1.0.0-py3-none-any.whl
 │
 ├── 📂 weights/                   # Thư mục chứa trọng số mạng nơ-ron (.pth)
 │   ├── image_encoder_mlp_weights.pth

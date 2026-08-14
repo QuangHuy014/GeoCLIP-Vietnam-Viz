@@ -94,7 +94,7 @@ def load_geoclip_service(scope: str):
 
 def main():
     st.markdown('<p class="main-title">🌍 GeoCLIP Vietnam: Visual Geo-localization Dashboard</p>', unsafe_allow_html=True)
-    st.markdown('<p class="sub-title">Đồ án môn Phân tích và Trực quan hóa Dữ liệu — Trường Đại học Công nghệ Thông tin (UIT)</p>', unsafe_allow_html=True)
+    st.markdown('<p class="sub-title">Hệ thống Định vị Địa danh Thị giác & Bản đồ Không gian Tương tác</p>', unsafe_allow_html=True)
     st.divider()
 
     # --- SIDEBAR CONFIGURATION ---
@@ -126,10 +126,6 @@ def main():
             "Chọn ảnh mẫu:",
             ("Tải ảnh của bạn (Upload)", "Landmark 81 (TP.HCM)", "Kauai (Hawaii - USA)")
         )
-        
-        st.markdown("---")
-        st.markdown("### 👥 Đội ngũ Phát triển (UIT):")
-        st.caption("• **Tech Lead / AI Core**: Dev 1\n• **GIS Data & Metrics (Task 2.3)**: Dev 2 (Hữu Hàn)\n• **Frontend & Map Viz**: Dev 3, 4, 5")
 
     # Nạp Service tương ứng
     with st.spinner("Đang nạp mô hình AI và Thư viện Tọa độ..."):
@@ -139,7 +135,7 @@ def main():
     tab1, tab2, tab3 = st.tabs([
         "🚀 Dự Đoán Vị Trí Ảnh",
         "📚 Khám Phá Dữ Liệu (Data Explorer)",
-        "📐 Đo Đạc Sai Số GIS (Task 2.3)"
+        "📐 Đo Đạc Sai Số GIS (Distance Metrics)"
     ])
 
     # =========================================================================
@@ -215,7 +211,7 @@ def main():
                 </div>
                 """, unsafe_allow_html=True)
 
-                # --- ĐO ĐẠC SAI SỐ GIS (TASK 2.3 CỦA HÀN) TRÊN UI ---
+                # --- ĐO ĐẠC SAI SỐ GIS TRÊN UI ---
                 if ground_truth_gps is not None:
                     pred_gps = (top1['lat'], top1['lon'])
                     dist_error_km = calculate_geodesic_distance(ground_truth_gps, pred_gps, method="haversine")
@@ -231,7 +227,7 @@ def main():
 
                     st.markdown(f"""
                     <div class="gis-card">
-                        <span class="gis-badge">📐 ĐO ĐẠC SAI SỐ GIS (TASK 2.3)</span>
+                        <span class="gis-badge">📐 ĐO ĐẠC SAI SỐ GIS (GEODESIC METRICS)</span>
                         <div style="margin-top: 8px;">
                             <b>🎯 Tọa độ thực tế:</b> ({ground_truth_gps[0]:.6f}, {ground_truth_gps[1]:.6f})<br>
                             <b>📍 Tọa độ AI dự đoán:</b> ({pred_gps[0]:.6f}, {pred_gps[1]:.6f})<br>
@@ -299,10 +295,10 @@ def main():
             st.warning(f"Chưa tìm thấy file dữ liệu {target_csv}!")
 
     # =========================================================================
-    # TAB 3: MÔ-ĐUN PHÂN TÍCH SAI SỐ GIS & CÔNG THỨC HAVERSINE (TASK 2.3)
+    # TAB 3: MÔ-ĐUN PHÂN TÍCH SAI SỐ GIS & CÔNG THỨC HAVERSINE
     # =========================================================================
     with tab3:
-        st.subheader("📐 Mô-đun Đo Đạc Khoảng Cách Sai Số GIS (Task 2.3 - Hữu Hàn)")
+        st.subheader("📐 Mô-đun Đo Đạc Khoảng Cách Sai Số GIS (Geodesic / Haversine)")
         st.markdown("""
         Mô-đun này chịu trách nhiệm tính toán khoảng cách đường cong mặt cầu (Great-Circle Distance) 
         bằng **Công thức Haversine** và đo đạc độ chính xác theo các ngưỡng bán kính chuẩn **Acc@K (ICCV Standard)**.

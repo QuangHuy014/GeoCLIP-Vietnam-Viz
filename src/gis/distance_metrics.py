@@ -108,14 +108,20 @@ def compute_distance_accuracy_metrics(
         acc_pct = (correct_count / total_count) * 100.0
         metrics[f"Acc@{threshold}km"] = round(acc_pct, 2)
 
-    metrics["Mean_Error_km"] = round(sum(distances) / total_count, 2)
+    mean_err = round(sum(distances) / total_count, 2)
+    metrics["mean_error_km"] = mean_err
+    metrics["Mean_Error_km"] = mean_err
+
     sorted_dists = sorted(distances)
     mid = total_count // 2
     if total_count % 2 == 0:
         median_val = (sorted_dists[mid - 1] + sorted_dists[mid]) / 2.0
     else:
         median_val = sorted_dists[mid]
-    metrics["Median_Error_km"] = round(median_val, 2)
+    
+    med_err = round(median_val, 2)
+    metrics["median_error_km"] = med_err
+    metrics["Median_Error_km"] = med_err
 
     return metrics
 

@@ -4,11 +4,12 @@
 # ==============================================================================
 
 import folium
-from typing import List, Dict
+from typing import List, Dict, Tuple
 
 def create_prediction_map(predictions: List[Dict],
                           map_center: List[float] = None,
                           zoom_start: int = 6,
+                          ground_truth: Tuple[float, float] = None,
                           save_html_path: str = None) -> folium.Map:
     """
     Tạo bản đồ tương tác Folium hiển thị Top-K kết quả dự đoán địa danh Việt Nam.
@@ -16,21 +17,22 @@ def create_prediction_map(predictions: List[Dict],
         predictions: Danh sách kết quả từ GeoCLIPService.predict()
         map_center: [Lat, Lon] trung tâm bản đồ (Mặc định: Đà Nẵng [16.047, 108.206])
         zoom_start: Mức phóng to ban đầu (mặc định = 6 để thấy toàn cảnh Việt Nam)
+        ground_truth: (Lat, Lon) tọa độ thực tế nếu có để đo khoảng cách và vẽ đường nối
         save_html_path: Đường dẫn lưu file HTML nếu muốn xuất file
     Returns:
         Đối tượng folium.Map
     """
     if map_center is None:
-        if predictions and len(predictions) > 0:
-            # Lấy vị trí Top 1 làm trung tâm
+        if ground_truth:
+            map_center = [ground_truth[0], ground_truth[1]]
+            zoom_start = 12
+        elif predictions and len(predictions) > 0:
             map_center = [predictions[0]['lat'], predictions[0]['lon']]
-            zoom_start = 12  # Zoom gần vào thành phố
+            zoom_start = 12
         else:
-            # Mặc định trung tâm Việt Nam
             map_center = [16.047079, 108.206230]
             zoom_start = 6
 
-    # Khởi tạo bản đồ nền OpenStreetMap / CartoDB Positron
     m = folium.Map(
         location=map_center,
         zoom_start=zoom_start,
@@ -38,7 +40,28 @@ def create_prediction_map(predictions: List[Dict],
         control_scale=True
     )
 
-    # Thêm các điểm ghim (Markers)
+    # Nếu có tọa độ thực tế (Ground Truth), vẽ điểm xanh lá cây
+    if ground_truth:
+        gt_lat, gt_lon = ground_truth
+        folium.Marker(
+            location=[gt_lat, gt_lon],
+            popup=folium.Popup(f"<b>🎯 VỊ TRÍ THỰC TẾ (Ground Truth)</b><br>Lat: {gt_lat:.6f}, Lon: {gt_lon:.6f}", max_width=250),
+            tooltip="🎯 Vị trí thực tế",
+            icon=folium.Icon(color='green', icon='ok-sign', prefix='glyphicon')
+        ).add_to(m)
+
+        # Vẽ đường Geodesic nối từ Tọa độ thật -> Top 1 Dự đoán
+        if predictions and len(predictions) > 0:
+            pred_lat, pred_lon = predictions[0]['lat'], predictions[0]['lon']
+            folium.PolyLine(
+                locations=[[gt_lat, gt_lon], [pred_lat, pred_lon]],
+                color="#E53E3E",
+                weight=3,
+                dash_array="8, 8",
+                tooltip="Đường sai số Geodesic (Khoảng cách đường chim bay)"
+            ).add_to(m)
+
+    # Thêm các điểm ghim dự đoán (Markers)
     for p in predictions:
         rank = p.get('rank', 1)
         lat = p['lat']

@@ -75,6 +75,68 @@ GeoCLIP-Vietnam-Viz/
 
 ---
 
+### 🗺️ 3.1 Sơ đồ Luồng Công việc Module GIS (GIS Engineer Workflow - Task 2.1 & Task 2.3)
+
+![Bảng Phân công Nhiệm vụ GIS Engineer (Task 2.1 & Task 2.3)](docs/workflow_gis_engineer_vietnamese.png)
+
+![Sơ đồ Luồng Kỹ thuật GIS Workflow Diagram](docs/workflow_gis_engineer_task_2_1_2_3.png)
+
+Sơ đồ bên dưới thể hiện quy trình xử lý không gian từ tọa độ GPS thô cho đến khi xuất ra **Vector Vị trí 512D** (Task 2.1) và **Đo đạc Bảng sai số khoảng cách Acc@K** (Task 2.3):
+
+```mermaid
+flowchart TD
+    %% TASK 2.1: EQUAL EARTH & LOCATION ENCODER WORKFLOW
+    subgraph TASK_2_1 ["📍 TASK 2.1: Equal Earth Projection & Location Encoder Module"]
+        direction TB
+        GPS_RAW["📍 Tọa độ GPS WGS84<br/>(Vĩ độ Lat, Kinh độ Lon)"] --> CHK_BOUNDS{"1. Kiểm tra Giới hạn<br/>Lat: [-90, 90]<br/>Lon: [-180, 180]"}
+        
+        CHK_BOUNDS -- Hợp lệ --> CONV_RAD["2. Chuyển Độ sang Radian<br/>(lat_rad, lon_rad)"]
+        CHK_BOUNDS -- Không hợp lệ --> ERR_RAISE["❌ ValueError Exception"]
+        
+        CONV_RAD --> EE_PROJ["3. Phép chiếu Equal Earth<br/>equal_earth_projection()"]
+        EE_PROJ --> FLAT_2D["Tọa độ Mặt phẳng 2D (x, y)"]
+        
+        FLAT_2D --> RFF_LAYER["4. Lớp Mã hóa Tần số Sóng Fourier (RFF)<br/>MultiScaleGaussianEncoding"]
+        
+        subgraph SIGMAS ["3 Dải Tần số Sóng Fourier (σ)"]
+            SIG_1["σ = 1 (2⁰): Tần số thấp ➔ Quy mô Châu lục"]
+            SIG_2["σ = 16 (2⁴): Tần số trung bình ➔ Quy mô Quốc gia"]
+            SIG_3["σ = 256 (2⁸): Tần số cao ➔ Quy mô Khu vực/Địa danh"]
+        end
+        RFF_LAYER --- SIGMAS
+        
+        RFF_LAYER --> RFF_FEATS["Vector Đặc trưng Sóng Fourier (1536D)"]
+        RFF_FEATS --> MLP_PROJ["5. Mạng Neural Projection (MLP)<br/>Linear(1536➔1024) ➔ ReLU ➔ Linear(1024➔512)"]
+        MLP_PROJ --> LOC_EMB["🌐 Vector Location Embedding Tensor (N, 512)"]
+    end
+
+    %% TASK 2.3: DISTANCE METRICS & ACCURACY EVALUATION WORKFLOW
+    subgraph TASK_2_3 ["📏 TASK 2.3: GIS Distance Error Metrics & Acc@K Evaluation"]
+        direction TB
+        GT_GPS["🎯 Ground-Truth GPS (Tọa độ Thực tế)"] & PRED_GPS["🤖 Predicted GPS (Tọa độ AI Dự đoán)"] --> CALC_DIST{"1. Tính Khoảng cách Sai số (km)<br/>calculate_geodesic_distance()"}
+        
+        CALC_DIST -- Tensor Batch Fast Calculation --> HAVERSINE["Công thức Haversine (Mặt cầu)"]
+        CALC_DIST -- High Accuracy Ellipsoid --> GEODESIC["Thư viện Geopy (WGS-84)"]
+        
+        HAVERSINE & GEODESIC --> DIST_LIST["Danh sách Khoảng cách Sai số (km)"]
+        
+        DIST_LIST --> ACC_EVAL["2. Đánh giá Chỉ số Bán kính<br/>compute_distance_accuracy_metrics()"]
+        
+        subgraph METRICS_TBL ["Bảng Kết quả Đánh giá Sai số GIS"]
+            M_ACC1["Acc@1km: Tỷ lệ % chuẩn xác trong 1km"]
+            M_ACC25["Acc@25km: Tỷ lệ % chuẩn xác cùng Thành phố"]
+            M_ACC200["Acc@200km: Tỷ lệ % chuẩn xác cùng Vùng/Miền"]
+            M_ERR["Mean & Median Distance Error (km)"]
+        end
+        ACC_EVAL --> METRICS_TBL
+    end
+
+    LOC_EMB --> |"Nạp Vector Vị trí 512D vào CSDL AI Core"| CALC_DIST
+```
+
+---
+
+
 ## 🚀 4. Hướng dẫn Cài đặt & Chạy cho Người mới (Quickstart)
 
 ### 🔹 Bước 1: Mở Terminal / Command Prompt

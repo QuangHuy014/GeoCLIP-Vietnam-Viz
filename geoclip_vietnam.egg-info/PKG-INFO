@@ -3,8 +3,8 @@ Name: geoclip-vietnam
 Version: 1.0.0
 Summary: Python library for image geo-localization in Vietnam and Globally using GeoCLIP (Vision-Location Matching)
 Home-page: https://github.com/QuangHuy014/GeoCLIP-Vietnam-Viz
-Author: UIT Data Analytics Team
-Author-email: quanghuy@uit.edu.vn
+Author: GeoCLIP Vietnam Project
+Author-email: contact@geoclip-vietnam.org
 Classifier: Programming Language :: Python :: 3
 Classifier: Programming Language :: Python :: 3.9
 Classifier: Programming Language :: Python :: 3.10

@@ -1,0 +1,6 @@
+include README.md
+include weights/*.pth
+include data/*.csv
+include data/*.geojson
+include data/images.jpg
+include data/sample_images/*

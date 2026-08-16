@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_d8f58b020fdfdd3464889e5aea738649 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+            <div class="folium-map" id="map_d8f58b020fdfdd3464889e5aea738649" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_d8f58b020fdfdd3464889e5aea738649 = L.map(
+                "map_d8f58b020fdfdd3464889e5aea738649",
+                {
+                    center: [10.773821, 106.703214],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 12,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+            L.control.scale().addTo(map_d8f58b020fdfdd3464889e5aea738649);
+
+            
+
+        
+    
+            var tile_layer_676baf44070634467c62c35ac913a03b = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_676baf44070634467c62c35ac913a03b.addTo(map_d8f58b020fdfdd3464889e5aea738649);
+        
+    
+            var marker_adc10c752cf3bb0328b5ed2a9a97aa1e = L.marker(
+                [10.773821, 106.703214],
+                {
+}
+            ).addTo(map_d8f58b020fdfdd3464889e5aea738649);
+        
+    
+            var icon_67a73fdb231d0ef9f2f854915d850b7d = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "red",
+  "iconColor": "white",
+  "icon": "star",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_254337681a28ca1b61090bb11e7060bc = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_5ae2d2f05ae42facf19ebfdcc1839f2f = $(`<div id="html_5ae2d2f05ae42facf19ebfdcc1839f2f" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; width: 220px; font-size: 13px;">             <div style="background-color: #E53E3E; color: white; padding: 6px; border-radius: 4px; font-weight: bold; text-align: center;">                 ⭐ HẠNG 1 (12.56%)             </div>             <div style="padding: 8px 4px;">                 <h4 style="margin: 4px 0; color: #2D3748;">Phố đi bộ Nguyễn Huệ</h4>                 <p style="margin: 2px 0; color: #718096;"><b>Tỉnh/Thành:</b> TP. Hồ Chí Minh</p>                 <p style="margin: 2px 0; color: #718096;"><b>Loại hình:</b> Không gian công cộng</p>                 <p style="margin: 2px 0; font-size: 11px; color: #A0AEC0;">Tọa độ: 10.7738, 106.7032</p>                 <div style="margin-top: 8px; text-align: center;">                     <a href="https://www.google.com/maps?q=10.773821,106.703214" target="_blank" style="background-color: #38A169; color: white; padding: 4px 10px; border-radius: 4px; text-decoration: none; font-size: 12px; display: inline-block;">                         📍 Xem trên Google Maps                     </a>                 </div>             </div>         </div>         </div>`)[0];
+                popup_254337681a28ca1b61090bb11e7060bc.setContent(html_5ae2d2f05ae42facf19ebfdcc1839f2f);
+            
+        
+
+        marker_adc10c752cf3bb0328b5ed2a9a97aa1e.bindPopup(popup_254337681a28ca1b61090bb11e7060bc)
+        ;
+
+        
+    
+    
+            marker_adc10c752cf3bb0328b5ed2a9a97aa1e.bindTooltip(
+                `<div>
+                     Hạng #1: Phố đi bộ Nguyễn Huệ (12.56%)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_adc10c752cf3bb0328b5ed2a9a97aa1e.setIcon(icon_67a73fdb231d0ef9f2f854915d850b7d);
+            
+    
+            var circle_28eea27780c6374560861d1eeae03d3a = L.circle(
+                [10.773821, 106.703214],
+                {"bubblingMouseEvents": true, "color": "#E53E3E", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FEB2B2", "fillOpacity": 0.3, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 15000, "stroke": true, "weight": 1.5}
+            ).addTo(map_d8f58b020fdfdd3464889e5aea738649);
+        
+    
+        var popup_9e3fc964c29c0fb438ad2b014404322f = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_16cac94ce73e13ca5b118fe1e497edb7 = $(`<div id="html_16cac94ce73e13ca5b118fe1e497edb7" style="width: 100.0%; height: 100.0%;">Vùng xác suất tập trung (Bán kính 15km)</div>`)[0];
+                popup_9e3fc964c29c0fb438ad2b014404322f.setContent(html_16cac94ce73e13ca5b118fe1e497edb7);
+            
+        
+
+        circle_28eea27780c6374560861d1eeae03d3a.bindPopup(popup_9e3fc964c29c0fb438ad2b014404322f)
+        ;
+
+        
+    
+    
+            var marker_f936bb30badd456b3deb1ca73fb0938d = L.marker(
+                [10.771542, 106.704218],
+                {
+}
+            ).addTo(map_d8f58b020fdfdd3464889e5aea738649);
+        
+    
+            var icon_18f7ce40afe82cc49dd19845aaef821a = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "orange",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_b8e1ec7271e45407acfd612937dc446b = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_ca4ba7823f50d6d361389ad46eb65e8f = $(`<div id="html_ca4ba7823f50d6d361389ad46eb65e8f" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; width: 220px; font-size: 13px;">             <div style="background-color: #3182CE; color: white; padding: 6px; border-radius: 4px; font-weight: bold; text-align: center;">                 HẠNG #2 (12.09%)             </div>             <div style="padding: 8px 4px;">                 <h4 style="margin: 4px 0; color: #2D3748;">Tòa tháp Bitexco Financial Tower</h4>                 <p style="margin: 2px 0; color: #718096;"><b>Tỉnh/Thành:</b> TP. Hồ Chí Minh</p>                 <p style="margin: 2px 0; color: #718096;"><b>Loại hình:</b> Tòa nhà chọc trời</p>                 <p style="margin: 2px 0; font-size: 11px; color: #A0AEC0;">Tọa độ: 10.7715, 106.7042</p>                 <div style="margin-top: 8px; text-align: center;">                     <a href="https://www.google.com/maps?q=10.771542,106.704218" target="_blank" style="background-color: #38A169; color: white; padding: 4px 10px; border-radius: 4px; text-decoration: none; font-size: 12px; display: inline-block;">                         📍 Xem trên Google Maps                     </a>                 </div>             </div>         </div>         </div>`)[0];
+                popup_b8e1ec7271e45407acfd612937dc446b.setContent(html_ca4ba7823f50d6d361389ad46eb65e8f);
+            
+        
+
+        marker_f936bb30badd456b3deb1ca73fb0938d.bindPopup(popup_b8e1ec7271e45407acfd612937dc446b)
+        ;
+
+        
+    
+    
+            marker_f936bb30badd456b3deb1ca73fb0938d.bindTooltip(
+                `<div>
+                     Hạng #2: Tòa tháp Bitexco Financial Tower (12.09%)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_f936bb30badd456b3deb1ca73fb0938d.setIcon(icon_18f7ce40afe82cc49dd19845aaef821a);
+            
+    
+            var marker_03ad7207dfd3c7cbd1119dfa1ce0c8a2 = L.marker(
+                [10.795021, 106.721542],
+                {
+}
+            ).addTo(map_d8f58b020fdfdd3464889e5aea738649);
+        
+    
+            var icon_ad74ea1389dd131510472adac899fa48 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "map-marker",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_e41a7b30e1e6788d19b19dcb870aea8a = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_f0057c93edc48e253f7bf205e99a43be = $(`<div id="html_f0057c93edc48e253f7bf205e99a43be" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; width: 220px; font-size: 13px;">             <div style="background-color: #3182CE; color: white; padding: 6px; border-radius: 4px; font-weight: bold; text-align: center;">                 HẠNG #3 (10.92%)             </div>             <div style="padding: 8px 4px;">                 <h4 style="margin: 4px 0; color: #2D3748;">Landmark 81</h4>                 <p style="margin: 2px 0; color: #718096;"><b>Tỉnh/Thành:</b> TP. Hồ Chí Minh</p>                 <p style="margin: 2px 0; color: #718096;"><b>Loại hình:</b> Tòa nhà chọc trời</p>                 <p style="margin: 2px 0; font-size: 11px; color: #A0AEC0;">Tọa độ: 10.7950, 106.7215</p>                 <div style="margin-top: 8px; text-align: center;">                     <a href="https://www.google.com/maps?q=10.795021,106.721542" target="_blank" style="background-color: #38A169; color: white; padding: 4px 10px; border-radius: 4px; text-decoration: none; font-size: 12px; display: inline-block;">                         📍 Xem trên Google Maps                     </a>                 </div>             </div>         </div>         </div>`)[0];
+                popup_e41a7b30e1e6788d19b19dcb870aea8a.setContent(html_f0057c93edc48e253f7bf205e99a43be);
+            
+        
+
+        marker_03ad7207dfd3c7cbd1119dfa1ce0c8a2.bindPopup(popup_e41a7b30e1e6788d19b19dcb870aea8a)
+        ;
+
+        
+    
+    
+            marker_03ad7207dfd3c7cbd1119dfa1ce0c8a2.bindTooltip(
+                `<div>
+                     Hạng #3: Landmark 81 (10.92%)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_03ad7207dfd3c7cbd1119dfa1ce0c8a2.setIcon(icon_ad74ea1389dd131510472adac899fa48);
+            
+    
+            var marker_ed4f4a3a58eddafa454555c5ccafb8a6 = L.marker(
+                [10.779836, 106.699971],
+                {
+}
+            ).addTo(map_d8f58b020fdfdd3464889e5aea738649);
+        
+    
+            var icon_c89d0953403203a4d55df1fe246e4ac7 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "map-marker",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_543135ddb9f5e3570da20b855938d1da = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_2f683b5c2cca8a3dbcea78c568c0e3df = $(`<div id="html_2f683b5c2cca8a3dbcea78c568c0e3df" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; width: 220px; font-size: 13px;">             <div style="background-color: #3182CE; color: white; padding: 6px; border-radius: 4px; font-weight: bold; text-align: center;">                 HẠNG #4 (10.70%)             </div>             <div style="padding: 8px 4px;">                 <h4 style="margin: 4px 0; color: #2D3748;">Bưu điện Trung tâm Sài Gòn</h4>                 <p style="margin: 2px 0; color: #718096;"><b>Tỉnh/Thành:</b> TP. Hồ Chí Minh</p>                 <p style="margin: 2px 0; color: #718096;"><b>Loại hình:</b> Kiến trúc cổ</p>                 <p style="margin: 2px 0; font-size: 11px; color: #A0AEC0;">Tọa độ: 10.7798, 106.7000</p>                 <div style="margin-top: 8px; text-align: center;">                     <a href="https://www.google.com/maps?q=10.779836,106.699971" target="_blank" style="background-color: #38A169; color: white; padding: 4px 10px; border-radius: 4px; text-decoration: none; font-size: 12px; display: inline-block;">                         📍 Xem trên Google Maps                     </a>                 </div>             </div>         </div>         </div>`)[0];
+                popup_543135ddb9f5e3570da20b855938d1da.setContent(html_2f683b5c2cca8a3dbcea78c568c0e3df);
+            
+        
+
+        marker_ed4f4a3a58eddafa454555c5ccafb8a6.bindPopup(popup_543135ddb9f5e3570da20b855938d1da)
+        ;
+
+        
+    
+    
+            marker_ed4f4a3a58eddafa454555c5ccafb8a6.bindTooltip(
+                `<div>
+                     Hạng #4: Bưu điện Trung tâm Sài Gòn (10.70%)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_ed4f4a3a58eddafa454555c5ccafb8a6.setIcon(icon_c89d0953403203a4d55df1fe246e4ac7);
+            
+    
+            var marker_638b5629b0bf8c2e40523c7b88d9d5c5 = L.marker(
+                [10.779785, 106.699018],
+                {
+}
+            ).addTo(map_d8f58b020fdfdd3464889e5aea738649);
+        
+    
+            var icon_c497d6d02d92f3fe46e43e8c8b6c3257 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "map-marker",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_fbd552a8422cdbeaba11646e003fe0fb = L.popup({
+  "maxWidth": 300,
+});
+
+        
+            
+                var html_0d9bdb1be9cd6954bad311e1553ad5f4 = $(`<div id="html_0d9bdb1be9cd6954bad311e1553ad5f4" style="width: 100.0%; height: 100.0%;">         <div style="font-family: Arial, sans-serif; width: 220px; font-size: 13px;">             <div style="background-color: #3182CE; color: white; padding: 6px; border-radius: 4px; font-weight: bold; text-align: center;">                 HẠNG #5 (10.04%)             </div>             <div style="padding: 8px 4px;">                 <h4 style="margin: 4px 0; color: #2D3748;">Nhà thờ Đức Bà</h4>                 <p style="margin: 2px 0; color: #718096;"><b>Tỉnh/Thành:</b> TP. Hồ Chí Minh</p>                 <p style="margin: 2px 0; color: #718096;"><b>Loại hình:</b> Di tích tôn giáo</p>                 <p style="margin: 2px 0; font-size: 11px; color: #A0AEC0;">Tọa độ: 10.7798, 106.6990</p>                 <div style="margin-top: 8px; text-align: center;">                     <a href="https://www.google.com/maps?q=10.779785,106.699018" target="_blank" style="background-color: #38A169; color: white; padding: 4px 10px; border-radius: 4px; text-decoration: none; font-size: 12px; display: inline-block;">                         📍 Xem trên Google Maps                     </a>                 </div>             </div>         </div>         </div>`)[0];
+                popup_fbd552a8422cdbeaba11646e003fe0fb.setContent(html_0d9bdb1be9cd6954bad311e1553ad5f4);
+            
+        
+
+        marker_638b5629b0bf8c2e40523c7b88d9d5c5.bindPopup(popup_fbd552a8422cdbeaba11646e003fe0fb)
+        ;
+
+        
+    
+    
+            marker_638b5629b0bf8c2e40523c7b88d9d5c5.bindTooltip(
+                `<div>
+                     Hạng #5: Nhà thờ Đức Bà (10.04%)
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_638b5629b0bf8c2e40523c7b88d9d5c5.setIcon(icon_c497d6d02d92f3fe46e43e8c8b6c3257);
+            
+</script>
+</html>

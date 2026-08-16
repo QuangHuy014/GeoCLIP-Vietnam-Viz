@@ -1,10 +1,11 @@
 # ==============================================================================
-# MODULE: GeoCLIP Main Pipeline Service (Tech Lead: Dev 1)
-# RESPONSIBILITY: Main API Integration Service for predicting GPS from image
+# MODULE: GeoCLIP Main Pipeline Service (Tech Lead & Agent Team)
+# RESPONSIBILITY: Main API Integration Service for predicting GPS in Vietnam & Globally
 # ==============================================================================
 
 import os
 import sys
+import json
 import torch
 import numpy as np
 import pandas as pd
@@ -25,18 +26,26 @@ from src.core.matcher import CosineMatcher
 from src.core.location_encoder import LocationEncoder
 
 class GeoCLIPService:
-    def __init__(self, root_dir: str = None):
+    def __init__(self, root_dir: str = None, scope: str = "vietnam"):
+        """
+        Khởi tạo GeoCLIP Service.
+        Args:
+            root_dir: Đường dẫn thư mục gốc của dự án.
+            scope: 'vietnam' (Chuyên biệt Việt Nam) hoặc 'global' (Toàn cầu 100K).
+        """
         if root_dir is None:
             root_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+        self.root_dir = root_dir
         self.weights_dir = os.path.join(root_dir, "weights")
         self.data_dir = os.path.join(root_dir, "data")
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        self.scope = scope.lower()
         
-        # 1. Nạp các mô hình AI
+        # 1. Nạp các mô hình AI Backbone
         self._load_model()
         
-        # 2. Nạp dữ liệu tọa độ 100K toàn cầu và tiền tính toán Location Embeddings (Caching)
+        # 2. Nạp dữ liệu tọa độ và tiền tính toán Location Embeddings (RAM Caching)
         self._load_gps_gallery()
 
     def _load_model(self):
@@ -63,16 +72,36 @@ class GeoCLIPService:
 
     def _load_gps_gallery(self):
         """
-        Nạp tập dữ liệu 100K tọa độ phân bố toàn cầu (coordinates_100K.csv)
+        Nạp tập tọa độ tương ứng theo chế độ: 'vietnam_iconic', 'vietnam_all', 'vietnam' hoặc 'global'
         """
-        global_csv = os.path.join(self.data_dir, "coordinates_100K.csv")
-        if not os.path.exists(global_csv):
-            raise FileNotFoundError(f"Không tìm thấy file coordinates_100K.csv tại: {global_csv}!")
+        if self.scope in ["vietnam_iconic", "iconic"]:
+            vn_csv = os.path.join(self.data_dir, "vietnam_landmarks_iconic.csv")
+            if not os.path.exists(vn_csv):
+                vn_csv = os.path.join(self.data_dir, "vietnam_landmarks.csv")
 
-        print(f"[GeoCLIPService] Reading Global GPS Gallery: {os.path.basename(global_csv)}...")
-        df_global = pd.read_csv(global_csv)[['LAT', 'LON']].drop_duplicates().reset_index(drop=True)
-        self.gps_gallery = torch.tensor(df_global[['LAT', 'LON']].values, dtype=torch.float32)
-        print(f"[GeoCLIPService] Loaded {len(self.gps_gallery):,} Global GPS coordinates into Gallery!")
+            print(f"[GeoCLIPService] Loading Vietnam Iconic Landmarks: {os.path.basename(vn_csv)}...")
+            self.metadata_df = pd.read_csv(vn_csv).reset_index(drop=True)
+            self.gps_gallery = torch.tensor(self.metadata_df[['LAT', 'LON']].values, dtype=torch.float32)
+            print(f"[GeoCLIPService] Loaded {len(self.gps_gallery):,} Vietnam Iconic Landmarks!")
+        elif self.scope in ["vietnam", "vietnam_all", "all"]:
+            vn_csv = os.path.join(self.data_dir, "vietnam_landmarks.csv")
+            if not os.path.exists(vn_csv):
+                raise FileNotFoundError(f"Không tìm thấy file: {vn_csv}")
+
+            print(f"[GeoCLIPService] Loading Vietnam Full POI Dataset: {os.path.basename(vn_csv)}...")
+            self.metadata_df = pd.read_csv(vn_csv).reset_index(drop=True)
+            self.gps_gallery = torch.tensor(self.metadata_df[['LAT', 'LON']].values, dtype=torch.float32)
+            print(f"[GeoCLIPService] Loaded {len(self.gps_gallery):,} Vietnam POI coordinates into Gallery!")
+        else:
+            global_csv = os.path.join(self.data_dir, "coordinates_100K.csv")
+            if not os.path.exists(global_csv):
+                raise FileNotFoundError(f"Không tìm thấy file: {global_csv}")
+
+            print(f"[GeoCLIPService] Loading Global 100K GPS Gallery: {os.path.basename(global_csv)}...")
+            df_global = pd.read_csv(global_csv)[['LAT', 'LON']].drop_duplicates().reset_index(drop=True)
+            self.metadata_df = df_global
+            self.gps_gallery = torch.tensor(df_global[['LAT', 'LON']].values, dtype=torch.float32)
+            print(f"[GeoCLIPService] Loaded {len(self.gps_gallery):,} Global GPS coordinates!")
 
         # Tiền tính toán Location Embeddings vào RAM (Pre-encoding)
         print(f"[GeoCLIPService] Pre-encoding Location Embeddings...")
@@ -84,12 +113,12 @@ class GeoCLIPService:
                 feat = self.location_encoder(batch_gps)
                 loc_features_list.append(feat.cpu())
         self.location_features = torch.cat(loc_features_list, dim=0).to(self.device)
-        print(f"[GeoCLIPService] Global Location Embeddings Ready! Matrix Shape: {self.location_features.shape}")
+        print(f"[GeoCLIPService] Location Embeddings Ready! Matrix Shape: {self.location_features.shape}")
 
     def predict(self, image_input, top_k: int = 5) -> List[Dict]:
         """
-        Dự đoán Top-K tọa độ GPS toàn cầu cho 1 bức ảnh đầu vào (Đường dẫn str hoặc PIL Image)
-        Thời gian suy luận siêu tốc: ~0.02s
+        Dự đoán Top-K tọa độ GPS cho 1 bức ảnh đầu vào (Đường dẫn str hoặc PIL Image)
+        Thời gian suy luận: ~0.005s
         """
         # 1. Đọc và tiền xử lý ảnh
         if isinstance(image_input, str):
@@ -107,18 +136,29 @@ class GeoCLIPService:
 
             # Gọi hàm match và get_top_k từ CosineMatcher (Task 1.2)
             logits = CosineMatcher.match(image_features, self.location_features, self.logit_scale)
-            indices, probs = CosineMatcher.get_top_k(logits, top_k=top_k)
+            top_k_val = min(top_k, len(self.gps_gallery))
+            indices, probs = CosineMatcher.get_top_k(logits, top_k=top_k_val)
 
-        # 3. Đóng gói kết quả sạch để bàn giao cho UI Team
+        # 3. Đóng gói kết quả sạch kèm Rich Metadata
         results = []
-        for i in range(top_k):
+        for i in range(top_k_val):
             idx = indices[i].item()
-            lat = float(self.gps_gallery[idx][0].item())
-            lon = float(self.gps_gallery[idx][1].item())
+            row = self.metadata_df.iloc[idx]
+            lat = float(row['LAT'])
+            lon = float(row['LON'])
             prob = float(probs[i].item() * 100)
+
+            name = str(row.get('NAME', f'GPS Point #{idx}'))
+            category = str(row.get('CATEGORY', 'Địa danh'))
+            province = str(row.get('PROVINCE', 'Việt Nam'))
+            description = str(row.get('DESCRIPTION', ''))
 
             results.append({
                 "rank": i + 1,
+                "name": name,
+                "category": category,
+                "province": province,
+                "description": description,
                 "lat": lat,
                 "lon": lon,
                 "prob_percent": round(prob, 2),
@@ -129,20 +169,19 @@ class GeoCLIPService:
 
 
 # ==============================================================================
-# UNIT TEST (Kiểm thử dịch vụ với ảnh thực tế)
+# UNIT TEST (Kiểm thử dịch vụ với ảnh Landmark 81)
 # ==============================================================================
 if __name__ == "__main__":
-    print("=" * 60)
-    print("      [Tech Lead Unit Test] Testing GeoCLIPService (Global 100K)")
-    print("=" * 60)
+    print("=" * 65)
+    print("      [Tech Lead Unit Test] Testing GeoCLIPService (Vietnam Mode)")
+    print("=" * 65)
 
-    # 1. Khởi tạo Service
-    service = GeoCLIPService()
+    # 1. Khởi tạo Service chế độ Việt Nam
+    service = GeoCLIPService(scope="vietnam")
 
-    # 2. Tìm ảnh mẫu để test (Ưu tiên ảnh mẫu Kauai.png từ tác giả GeoCLIP)
+    # 2. Tìm ảnh Landmark 81
     candidate_paths = [
         sys.argv[1] if len(sys.argv) > 1 else None,
-        os.path.join(root_dir, "data", "sample_images", "Kauai.png"),
         os.path.join(root_dir, "data", "images.jpg"),
         os.path.join(root_dir, "data", "sample_images", "images.jpg")
     ]
@@ -153,19 +192,21 @@ if __name__ == "__main__":
             break
 
     if test_img is None:
-        dummy_array = np.uint8(np.random.rand(224, 224, 3) * 255)
-        test_img = Image.fromarray(dummy_array)
+        print("[!] Không tìm thấy ảnh images.jpg!")
+        sys.exit(1)
 
     # 3. Chạy hàm predict
     print(f"\n[Test] Predicting location for: {test_img}...")
     predictions = service.predict(test_img, top_k=5)
 
-    print("\n" + "-" * 60)
-    print("              TOP 5 GLOBAL PREDICTION RESULTS")
-    print("-" * 60)
+    print("\n" + "=" * 65)
+    print("              📍 TOP 5 VIETNAM PREDICTION RESULTS")
+    print("=" * 65)
     for p in predictions:
-        print(f"Rank #{p['rank']}: Lat = {p['lat']:10.6f}, Lon = {p['lon']:10.6f} | Probability: {p['prob_percent']:6.2f}%")
+        print(f"Hạng #{p['rank']}: {p['name']} ({p['province']}) - {p['category']}")
+        print(f"        Vĩ độ = {p['lat']:10.6f}, Kinh độ = {p['lon']:10.6f} | Xác suất: {p['prob_percent']:6.2f}%")
         print(f"        Google Maps: {p['gmaps_url']}")
 
-    assert len(predictions) == 5, "Phải trả về đúng 5 kết quả!"
-    print("\n[Tech Lead Unit Test] Task 1.3 GeoCLIPService (Global 100K) PASSED!")
+    assert len(predictions) >= 1, "Phải có kết quả trả về!"
+    assert predictions[0]['name'] == 'Landmark 81', f"Top 1 phải là Landmark 81 nhưng lại là {predictions[0]['name']}!"
+    print("\n[Tech Lead Unit Test] Task 1.3 GeoCLIPService (Vietnam Mode) PASSED!")
